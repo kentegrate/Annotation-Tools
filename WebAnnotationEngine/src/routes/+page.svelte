@@ -196,6 +196,9 @@
             {#each words as word}
               <div class="word-item" on:click={() => startAnnotating(word)}>
                 {word}
+                {#if word.isComplete}
+                  <span class="checkmark"> ✅</span>
+                {/if}                
               </div>
             {/each}
           {/if}
