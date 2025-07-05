@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
 
   import { t } from 'svelte-i18n';
   import { setupResult } from '../lib/i18n'
@@ -64,7 +65,7 @@
 
   function selectBatch(batch) {
     selectedBatch = batch;
-    words = Object.keys(batches[batch]);
+    words = Object.entries(batches[batch]).map(([name, data]) => ({ name, ...data }));
   }
 
   function startAnnotating(word) {
@@ -191,16 +192,21 @@
 
         <!-- Word List -->
         <div class="word-list">
-          <h3>{selectedBatch ? `${selectedBatch} - ${$t('words')}` : $t('words')}</h3>
           {#if selectedBatch}
-            {#each words as word}
-              <div class="word-item" on:click={() => startAnnotating(word)}>
-                {word}
-                {#if word.isComplete}
-                  <span class="checkmark"> ✅</span>
-                {/if}                
-              </div>
-            {/each}
+            <div class="word-list">
+              <h3>{selectedBatch ? `${selectedBatch} - ${$t('words')}` : $t('words')}</h3>
+              {#if selectedBatch}
+                {#each words as wordData}
+                  <div class="word-item" on:click={() => startAnnotating(wordData.name)}>
+                    {wordData.name}
+                    {#if wordData.isComplete}
+                      <span class="text-green-500">✓</span>
+                    {/if}
+                  </div>
+                {/each}
+              {/if}
+            </div>
+
           {/if}
         </div>
     </div>
