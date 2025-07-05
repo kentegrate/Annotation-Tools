@@ -80,7 +80,7 @@ export async function GET({ params, request }) {
     }
 
     // Default full file response
-    const nodeStream = fs.createReadStream(filePath, { start, end });
+    const nodeStream = fs.createReadStream(filePath);
     let controllerClosed = false;
     
     const webStream = new ReadableStream({
