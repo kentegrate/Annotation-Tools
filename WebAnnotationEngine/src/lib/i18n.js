@@ -18,12 +18,10 @@ async function setup() {
   register('mr', () => import('../locales/mr.json'));
   register('hi', () => import('../locales/hi.json'));
 
-  return await Promise.allSettled([
-    init({
-      fallbackLocale: 'en',
-      initialLocale: getLocaleFromNavigator(),
-    })
-  ]);
+  await init({
+    fallbackLocale: 'en',
+    initialLocale: getLocaleFromNavigator(),
+  });
 }
 
 export const setupResult = setup();
