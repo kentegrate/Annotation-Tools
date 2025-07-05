@@ -32,6 +32,8 @@ export async function GET() {
     const referenceAPI = '/api/video/reference/';
     const batchesToLoad = configData.batches || [];
     const batches = {};
+    const allReviewVideoFilenames = []; // すべてのレビュービデオファイル名を収集する
+
 
     const relativePath = (fullPath) => fullPath.replace(path.resolve('static'), '');
 
@@ -72,12 +74,57 @@ export async function GET() {
           // Have the pages refer to the API when loading the videos (such that it can load outside of static)
           const filePath = path.join(reviewAPI, batchName, signName, file);
           batches[batchName][signName].reviews.push(filePath);
+          allReviewVideoFilenames.push(file); // ファイル名（basename）を収集
+
         }
       }
       if (Object.keys(batches[batchName]).length == 0) {
         delete batches[batchName];
       }
     }
+    // Flaskバックエンドで注釈ステータスを確認
+    let annotatedPaths = new Set();
+    if (allReviewVideoFilenames.length > 0) {
+        try {
+            const annotationResponse = await fetch('http://localhost:5000/check_annotations', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ video_paths: allReviewVideoFilenames }),
+            });
+
+            if (annotationResponse.ok) {
+                const { annotated_paths } = await annotationResponse.json();
+                annotatedPaths = new Set(annotated_paths);
+                console.log("Annotated paths from backend:", annotatedPaths); 
+
+            } else {
+                console.error("Failed to fetch annotation statuses from Flask backend");
+            }
+        } catch (e) {
+             console.error("Error connecting to Flask backend:", e);
+        }
+    }
+
+    // 'isComplete' フラグを設定
+    for (const batchName in batches) {
+        for (const signName in batches[batchName]) {
+            const wordData = batches[batchName][signName];
+            if (wordData.reviews && wordData.reviews.length > 0) {
+                const allAnnotated = wordData.reviews.every(reviewVideoPath => {
+                    const videoFileName = path.basename(reviewVideoPath);
+                    console.log(annotatedPaths);
+                    console.log(videoFileName);
+
+                    return annotatedPaths.has(videoFileName);
+                });
+                wordData.isComplete = allAnnotated;
+            }
+        }
+    }
+    
+    
     const referenceFiles = fs.readdirSync(referenceSource).filter(file => file.endsWith('.mp4'));
         
     //reference videos
