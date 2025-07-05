@@ -108,10 +108,10 @@
       case "-":
         revToggleLoop ();
         break;
-      case "0":
+      case "a":
         prevVideo();
         break;
-      case "=":
+      case "d":
         nextVideo();
         break;
       case "[":
@@ -120,17 +120,17 @@
       case "]":
         revSpeedUp();
         break;
-      case "z":
-        setLabel("Good");
-        break;
-      case "x":
-        setLabel("Variant");
-        break;
-      case "c":
-        setLabel("Bad");
+      case "g":
+        setLabel("良い");
         break;
       case "v":
-        setLabel("Further Review");
+        setLabel("違う表現");
+        break;
+      case "b":
+        setLabel("悪い");
+        break;
+      case "r":
+        setLabel("再確認が必要");
         break;
       default:
         return;
