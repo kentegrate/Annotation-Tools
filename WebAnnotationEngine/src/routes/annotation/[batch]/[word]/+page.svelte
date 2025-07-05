@@ -75,7 +75,7 @@
         [currReviewVideo]: {annot_label, annot_comments}
       }));
 
-      const response = await fetch("http://127.0.0.1:5000/add_annot", {
+      const response = await fetch("https://backend2.utokyo-jsl.org/add_annot", {
           method: "POST",
           headers: {
               "Content-Type": "application/json"

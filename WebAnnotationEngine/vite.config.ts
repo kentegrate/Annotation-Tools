@@ -10,7 +10,8 @@ export default defineConfig({
 	server: {
 		host: true, // or your specific IP
 		allowedHosts: [
-		'annotation.utokyo-jsl.org'
+		'annotation.utokyo-jsl.org',
+		'annotation2.utokyo-jsl.org'
 		]
   }	
 });

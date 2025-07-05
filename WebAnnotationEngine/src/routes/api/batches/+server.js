@@ -97,7 +97,6 @@ export async function GET() {
             if (annotationResponse.ok) {
                 const { annotated_paths } = await annotationResponse.json();
                 annotatedPaths = new Set(annotated_paths);
-                console.log("Annotated paths from backend:", annotatedPaths); 
 
             } else {
                 console.error("Failed to fetch annotation statuses from Flask backend");
@@ -114,8 +113,6 @@ export async function GET() {
             if (wordData.reviews && wordData.reviews.length > 0) {
                 const allAnnotated = wordData.reviews.every(reviewVideoPath => {
                     const videoFileName = path.basename(reviewVideoPath);
-                    console.log(annotatedPaths);
-                    console.log(videoFileName);
 
                     return annotatedPaths.has(videoFileName);
                 });

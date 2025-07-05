@@ -8,7 +8,7 @@ from sqlalchemy.dialects.mysql import insert
 from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "https://annotation.utokyo-jsl.org"]}})
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "https://annotation2.utokyo-jsl.org", "https://backend2.utokyo-jsl.org"]}})
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{DBLogin.USER}:{DBLogin.PSWD}@localhost/labels'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = Config.SQLALCHEMY_TRACK_MODIFICATIONS

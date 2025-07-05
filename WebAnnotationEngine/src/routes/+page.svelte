@@ -40,7 +40,7 @@
   async function saveUsername() {
     if (username.trim() === "") return;
 
-    const res = await fetch("http://127.0.0.1:5000/check_user", {
+    const res = await fetch("https://backend2.utokyo-jsl.org/check_user", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username }),
