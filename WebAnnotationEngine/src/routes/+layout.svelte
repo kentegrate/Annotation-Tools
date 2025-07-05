@@ -1,4 +1,15 @@
 <script>
+
+  import { setupResult } from '$lib/i18n.js';
+  import { onMount } from 'svelte';
+
+  let ready = false;
+
+  onMount(async () => {
+    await setupResult;
+    ready = true;
+  });
+
 	import '../app.css';
 
   let isPopupVisible = false; // Controls the visibility of the popup
@@ -8,6 +19,7 @@
   }
 
 </script>
+{#if ready}
 
 <div class="drawer lg:drawer-open">
   <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
@@ -28,3 +40,6 @@
     </ul>
   </div>
 </div>
+{:else}
+  <div>Loading...</div>
+{/if}
