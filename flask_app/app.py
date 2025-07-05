@@ -1,14 +1,14 @@
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models import db, Annot
+from models import db, Annot, User
 from config import Config, DBLogin
 from datetime import datetime
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "https://annotation.utokyo-jsl.org"]}})
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{DBLogin.USER}:{DBLogin.PSWD}@localhost/labels'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = Config.SQLALCHEMY_TRACK_MODIFICATIONS
@@ -25,6 +25,7 @@ def home():
 
 @app.route('/add_annot', methods=['POST'])
 def add_annot():
+    data = request.json
     if not User.query.filter_by(username=data["user"]).first():
         return jsonify({"error": "User not found"}), 403
     data = request.json
@@ -64,6 +65,26 @@ def check_user():
         return jsonify({"valid": True})
     else:
         return jsonify({"valid": False})
+
+@app.route('/check_annotations', methods=['POST'])
+def check_annotations():
+    """
+    ビデオパスのリストを受け取り、DB内で注釈が存在するパスのリストを返す。
+    """
+    data = request.json
+    video_paths_to_check = data.get('video_paths', [])
+
+    if not video_paths_to_check:
+        return jsonify({"annotated_paths": []})
+
+    # 提供されたビデオパスのうち、DBに存在するものだけを問い合わせる
+    query = db.select(db.distinct(Annot.video_path)).where(Annot.video_path.in_(video_paths_to_check))
+    
+    # .scalars().all() を使って結果をPythonのリストとして取得
+    annotated_paths = db.session.execute(query).scalars().all()
+    print(annotated_paths)
+
+    return jsonify({"annotated_paths": annotated_paths})
 
 
 if __name__ == '__main__':
