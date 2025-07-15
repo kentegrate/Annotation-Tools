@@ -123,6 +123,9 @@
       case "g":
         setLabel("良い");
         break;
+      case "o":
+        setLabel("手が一部画面外");
+        break;
       case "v":
         setLabel("違う表現");
         break;
@@ -352,6 +355,15 @@
                 alt="thumbs up icon">
           </button>
 
+          <!-- Out of frame button -->
+          <button on:click={() => setLabel($t('label_out_of_frame'))}
+              class="bg-[#D9D9D9] hover:bg-[#A9A9A9] text-white rounded-md p-2 md:p-2 lg:p-2.5 xl:p-3 m-3 transition-colors"
+              tabindex="-1">
+            <img id="outofframe-button" class="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8"
+                src="/outofframe.svg"
+                alt="thumbs up icon">
+          </button>
+
           <!-- Variant button -->
           <button on:click={() => setLabel($t('label_variant'))}
               class="bg-[#D9D9D9] hover:bg-[#A9A9A9] text-white rounded-md p-2 md:p-2 lg:p-2.5 xl:p-3 m-3 transition-colors"
@@ -384,6 +396,7 @@
             <div 
               class="flex items-center gap-2 p-2 md:p-2 lg:p-2.5 xl:p-3 m-3 rounded-md transition-colors whitespace-nowrap"
               class:bg-green-200={label === $t('label_good')}
+              class:bg-purple-200={label === $t('label_out_of_frame')}
               class:bg-yellow-200={label === $t('label_variant')}
               class:bg-red-200={label === $t('label_bad')}
               class:bg-blue-200={label === $t('label_further_review')}
@@ -391,6 +404,8 @@
               {#if label}
                 {#if label === $t('label_good')}
                   <img src="/thumbs-up.svg" class="w-6 h-6" alt="thumbs up icon" />
+                {:else if label === $t('label_out_of_frame')}
+                  <img src="/outofframe.svg" class="w-6 h-6" alt="variant icon" />
                 {:else if label === $t('label_variant')}
                   <img src="/variant.svg" class="w-6 h-6" alt="variant icon" />
                 {:else if label === $t('label_bad')}
