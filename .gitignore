@@ -32,3 +32,6 @@ WebAnnotationEngine/src/routes/config/sign_list.txt
 
 __pycache__/
 annot_venv/
+flask_app/need_contact/
+flask_app/__pycache__/*.pyc
+WebAnnotationEngine/static/ReviewVideos
